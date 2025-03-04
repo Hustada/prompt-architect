@@ -1,8 +1,7 @@
 # PromptArchitect
 
 PromptArchitect transforms project ideas into structured AI prompts. Generate comprehensive specifications for any project type with multiple AI models. Streamline your development workflow with precision-engineered prompts.
-
-**Powered by the Victor Collective**
+![Screenshot 2025-03-04 at 3 46 33 PM](https://github.com/user-attachments/assets/d4086034-f168-4d77-92a7-88385bec27c2)
 
 ## Features
 
@@ -135,3 +134,6 @@ For questions, feedback, or support, please contact:
 
 - Email: victorhustad@victorcollective.com
 - Website: [The Victor Collective](https://victorcollective.com)
+  
+### Powered by the Victor Collective
+  
