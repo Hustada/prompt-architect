@@ -2,71 +2,71 @@
 
 import { useState } from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ProjectType } from '@/lib/promptTemplates';
+import { AIModel } from '@/lib/api';
+import logger from '@/lib/logger';
 
 interface IdeaInputProps {
-  onGenerate: (prompt: any) => void;
+  onGenerate: (projectType: ProjectType, projectIdea: string, model: AIModel) => void;
   isGenerating: boolean;
 }
 
 const IdeaInput = ({ onGenerate, isGenerating }: IdeaInputProps) => {
   const [idea, setIdea] = useState('');
-  const [projectType, setProjectType] = useState('fullstack');
+  const [projectType, setProjectType] = useState<ProjectType>('fullstack');
+  const [model, setModel] = useState<AIModel>('openai');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // This is a placeholder for the actual API call
-    // In a real implementation, we would call an API endpoint
-    const mockGeneratedPrompt = {
-      title: 'Generated Project Prompt',
-      sections: [
-        {
-          title: 'Project Overview',
-          content: idea,
-        },
-        {
-          title: 'Tech Stack',
-          content: projectType === 'frontend' 
-            ? '- React\n- TypeScript\n- Tailwind CSS\n- Next.js' 
-            : projectType === 'backend'
-            ? '- Node.js\n- Express\n- MongoDB\n- TypeScript'
-            : '- React\n- TypeScript\n- Tailwind CSS\n- Next.js\n- Node.js\n- Express\n- MongoDB',
-        },
-        {
-          title: 'Features',
-          content: '- User authentication\n- Data persistence\n- Responsive design\n- API integration',
-        },
-        {
-          title: 'Requirements',
-          content: '1. Implement user authentication\n2. Create a responsive UI\n3. Connect to database\n4. Deploy to production',
-        },
-      ],
-      markdown: `# Project Overview\n${idea}\n\n# Tech Stack\n${projectType === 'frontend' 
-        ? '- React\n- TypeScript\n- Tailwind CSS\n- Next.js' 
-        : projectType === 'backend'
-        ? '- Node.js\n- Express\n- MongoDB\n- TypeScript'
-        : '- React\n- TypeScript\n- Tailwind CSS\n- Next.js\n- Node.js\n- Express\n- MongoDB'}\n\n# Features\n- User authentication\n- Data persistence\n- Responsive design\n- API integration\n\n# Requirements\n1. Implement user authentication\n2. Create a responsive UI\n3. Connect to database\n4. Deploy to production`
-    };
+    if (!idea.trim()) return;
     
-    onGenerate(mockGeneratedPrompt);
+    logger.info('User submitted idea for prompt generation', { 
+      projectType, 
+      model,
+      ideaLength: idea.length
+    });
+    
+    onGenerate(projectType, idea, model);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Project Type
-        </label>
-        <select
-          id="projectType"
-          value={projectType}
-          onChange={(e) => setProjectType(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="frontend">Frontend</option>
-          <option value="backend">Backend</option>
-          <option value="fullstack">Full Stack</option>
-        </select>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Project Type
+          </label>
+          <select
+            id="projectType"
+            value={projectType}
+            onChange={(e) => setProjectType(e.target.value as ProjectType)}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="frontend">Frontend</option>
+            <option value="backend">Backend</option>
+            <option value="fullstack">Full Stack</option>
+            <option value="mobile">Mobile App</option>
+            <option value="data science">Data Science</option>
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="model" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            AI Model
+          </label>
+          <select
+            id="model"
+            value={model}
+            onChange={(e) => setModel(e.target.value as AIModel)}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="openai">OpenAI GPT-4</option>
+            <option value="claude">Anthropic Claude</option>
+            <option value="gemini">Google Gemini</option>
+            <option value="deepseek">Deepseek</option>
+          </select>
+        </div>
       </div>
       
       <div>

@@ -2,13 +2,26 @@
 
 import { useState } from 'react';
 import { ClipboardDocumentIcon, ArrowDownTrayIcon, CheckIcon } from '@heroicons/react/24/outline';
+import SectionEditor from './section-editor';
+import { parseMarkdownSections, combineSections } from '@/lib/promptTemplates';
+import logger from '@/lib/logger';
+import { generatePrompt, AIModel } from '@/lib/api';
+import { ProjectType } from '@/lib/promptTemplates';
 
 interface PromptPreviewProps {
-  prompt: any;
+  prompt: {
+    markdown: string;
+    projectType: ProjectType;
+    projectIdea: string;
+    model: AIModel;
+  } | null;
+  onUpdatePrompt: (updatedMarkdown: string) => void;
+  onError?: (sectionTitle: string, errorMessage: string) => void;
 }
 
-const PromptPreview = ({ prompt }: PromptPreviewProps) => {
+const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) => {
   const [copied, setCopied] = useState(false);
+  const [regeneratingSections, setRegeneratingSections] = useState<string[]>([]);
   
   if (!prompt) {
     return (
@@ -25,56 +38,80 @@ const PromptPreview = ({ prompt }: PromptPreviewProps) => {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(prompt.markdown);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(prompt.markdown)
+      .then(() => {
+        setCopied(true);
+        logger.info('User copied prompt to clipboard');
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(error => {
+        logger.error('Failed to copy to clipboard', { error: error.message });
+        if (onError) {
+          onError('Copy to Clipboard', 'Failed to copy content to clipboard');
+        }
+      });
   };
 
   const downloadMarkdown = () => {
-    const blob = new Blob([prompt.markdown], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'prompt.md';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([prompt.markdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'prompt.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      logger.info('User downloaded prompt as markdown file');
+    } catch (error) {
+      logger.error('Failed to download markdown file', { error: error.message });
+      if (onError) {
+        onError('Download', 'Failed to download the markdown file');
+      }
+    }
   };
 
-  const renderMarkdown = (markdown: string) => {
-    return markdown.split('\n').map((line, index) => {
-      if (line.startsWith('# ')) {
-        return (
-          <h2 key={index} className="text-xl font-bold mt-6 mb-3 text-blue-800 dark:text-blue-400 font-mono">
-            {line.substring(2)}
-          </h2>
-        );
-      } else if (line.startsWith('## ')) {
-        return (
-          <h3 key={index} className="text-lg font-bold mt-4 mb-2 text-blue-700 dark:text-blue-500 font-mono">
-            {line.substring(3)}
-          </h3>
-        );
-      } else if (line.startsWith('- ')) {
-        return (
-          <li key={index} className="ml-4 list-disc">
-            {line.substring(2)}
-          </li>
-        );
-      } else if (/^\d+\./.test(line)) {
-        return (
-          <li key={index} className="ml-4 list-decimal">
-            {line.substring(line.indexOf('.') + 1).trim()}
-          </li>
-        );
-      } else if (line.trim() === '') {
-        return <div key={index} className="h-4"></div>;
-      } else {
-        return <p key={index}>{line}</p>;
+  const handleRegenerateSection = async (sectionTitle: string) => {
+    try {
+      setRegeneratingSections(prev => [...prev, sectionTitle]);
+      logger.info(`Regenerating section: ${sectionTitle}`);
+      
+      // Parse the current markdown into sections
+      const sections = parseMarkdownSections(prompt.markdown);
+      
+      // Generate a new version of the requested section
+      const response = await generatePrompt({
+        projectType: prompt.projectType,
+        projectIdea: prompt.projectIdea,
+        model: prompt.model,
+        sectionToRegenerate: sectionTitle,
+        previousResponse: prompt.markdown,
+      });
+      
+      // Update the section in our sections object
+      sections[sectionTitle] = response.markdown;
+      
+      // Combine the sections back into a single markdown document
+      const updatedMarkdown = combineSections(sections);
+      
+      // Update the prompt
+      onUpdatePrompt(updatedMarkdown);
+      
+      logger.info(`Successfully regenerated section: ${sectionTitle}`);
+    } catch (error) {
+      logger.error(`Failed to regenerate section: ${sectionTitle}`, { error });
+      // Call the onError callback if provided
+      if (onError) {
+        onError(sectionTitle, error.message || 'An error occurred while regenerating this section');
       }
-    });
+    } finally {
+      setRegeneratingSections(prev => prev.filter(s => s !== sectionTitle));
+    }
   };
+
+  // Parse the markdown into sections for display
+  const sections = parseMarkdownSections(prompt.markdown);
 
   return (
     <div className="space-y-4">
@@ -108,15 +145,29 @@ const PromptPreview = ({ prompt }: PromptPreviewProps) => {
         <div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
           <h3 className="font-mono text-sm font-medium text-gray-500 dark:text-gray-400">prompt.md</h3>
         </div>
-        <div className="p-4 bg-white dark:bg-gray-800 prose dark:prose-invert max-w-none">
-          {renderMarkdown(prompt.markdown)}
+        <div className="p-4 bg-white dark:bg-gray-800 max-w-none">
+          {Object.keys(sections).length > 0 ? (
+            Object.entries(sections).map(([title, content]) => (
+              <SectionEditor
+                key={title}
+                title={title}
+                content={content}
+                onRegenerateSection={handleRegenerateSection}
+                isRegenerating={regeneratingSections.includes(title)}
+              />
+            ))
+          ) : (
+            <div className="text-center p-4 text-gray-500 dark:text-gray-400">
+              <p>No sections found in the generated prompt. The format may be incorrect.</p>
+            </div>
+          )}
         </div>
       </div>
       
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg p-4">
         <h3 className="font-medium text-blue-800 dark:text-blue-300 mb-2">AI Suggestions</h3>
         <p className="text-sm text-blue-700 dark:text-blue-400">
-          Consider adding more specific details about your project's target audience and success metrics.
+          Hover over any section heading to see the option to generate an alternative version of that section.
         </p>
       </div>
     </div>
