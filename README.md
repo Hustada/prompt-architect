@@ -1,6 +1,6 @@
 # PromptArchitect
 
-A powerful tool that transforms project ideas into structured markdown prompts for AI coding projects. PromptArchitect helps developers create comprehensive, well-organized requirement documents that can be used to guide AI assistants in coding tasks.
+PromptArchitect transforms project ideas into structured AI prompts. Generate comprehensive specifications for any project type with multiple AI models. Streamline your development workflow with precision-engineered prompts.
 
 **Powered by the Victor Collective**
 
@@ -63,6 +63,18 @@ A powerful tool that transforms project ideas into structured markdown prompts f
 6. Hover over any section heading to see the option to regenerate that specific section
 7. Copy the complete prompt to clipboard or download it as a .md file
 8. Use the generated prompt with your preferred AI coding assistant
+
+## Using with Cursor and AI Coding Assistants
+
+PromptArchitect provides a solid starting point for AI-driven development in Cursor and other AI coding assistants:
+
+1. **Project Blueprint**: Generate a comprehensive markdown document that outlines your project requirements
+2. **Download as Markdown**: Save your prompt as a .md file
+3. **Guide Your AI Session**: Open the markdown file in Cursor or copy-paste the content at the beginning of your conversation
+4. **Clear Communication**: The structured format helps you communicate your requirements clearly to the AI
+5. **Evolve Your Project**: As your project develops, return to PromptArchitect to refine specific sections
+
+The markdown file serves as a reference document that guides your AI-assisted development process. It's not an automatic integration, but rather a thoughtful starting point that helps you build better projects with AI assistance.
 
 ## Project Structure
 
