@@ -54,16 +54,26 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) 
 
   const downloadMarkdown = () => {
     try {
+      // Generate a filename based on project type and idea
+      const projectTitle = prompt.projectIdea
+        .split(' ')
+        .slice(0, 5) // Take first 5 words max
+        .join('-')
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, ''); // Remove special characters
+      
+      const filename = `${prompt.projectType}-${projectTitle}.md`;
+      
       const blob = new Blob([prompt.markdown], { type: 'text/markdown' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'prompt.md';
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      logger.info('User downloaded prompt as markdown file');
+      logger.info('User downloaded prompt as markdown file', { filename });
     } catch (error) {
       logger.error('Failed to download markdown file', { error: error.message });
       if (onError) {

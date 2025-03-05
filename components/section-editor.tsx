@@ -59,25 +59,67 @@ const SectionEditor = ({
         </div>
         
         <div className="mt-2 prose dark:prose-invert max-w-none">
-          {content.split('\n').map((line, index) => {
-            if (line.startsWith('- ')) {
-              return (
-                <li key={index} className="ml-4 list-disc">
-                  {line.substring(2)}
-                </li>
-              );
-            } else if (/^\d+\./.test(line)) {
-              return (
-                <li key={index} className="ml-4 list-decimal">
-                  {line.substring(line.indexOf('.') + 1).trim()}
-                </li>
-              );
-            } else if (line.trim() === '') {
-              return <div key={index} className="h-4"></div>;
-            } else {
-              return <p key={index}>{line}</p>;
+          {(() => {
+            const lines = content.split('\n');
+            const result = [];
+            let inCodeBlock = false;
+            let codeBlockContent = [];
+            let codeBlockLanguage = '';
+            let key = 0;
+
+            for (let i = 0; i < lines.length; i++) {
+              const line = lines[i];
+              
+              // Check for code block markers ```
+              if (line.startsWith('```')) {
+                if (!inCodeBlock) {
+                  // Start of code block
+                  inCodeBlock = true;
+                  codeBlockLanguage = line.substring(3).trim(); // Get language if specified
+                  codeBlockContent = [];
+                } else {
+                  // End of code block
+                  inCodeBlock = false;
+                  result.push(
+                    <div key={key++} className="bg-gray-100 dark:bg-gray-900 rounded-md p-4 my-4 overflow-x-auto">
+                      <pre className="text-sm font-mono">
+                        <code className={`language-${codeBlockLanguage}`}>
+                          {codeBlockContent.join('\n')}
+                        </code>
+                      </pre>
+                    </div>
+                  );
+                }
+                continue;
+              }
+
+              if (inCodeBlock) {
+                // Inside code block, collect lines
+                codeBlockContent.push(line);
+              } else {
+                // Regular markdown processing
+                if (line.startsWith('- ')) {
+                  result.push(
+                    <li key={key++} className="ml-4 list-disc">
+                      {line.substring(2)}
+                    </li>
+                  );
+                } else if (/^\d+\./.test(line)) {
+                  result.push(
+                    <li key={key++} className="ml-4 list-decimal">
+                      {line.substring(line.indexOf('.') + 1).trim()}
+                    </li>
+                  );
+                } else if (line.trim() === '') {
+                  result.push(<div key={key++} className="h-4"></div>);
+                } else {
+                  result.push(<p key={key++}>{line}</p>);
+                }
+              }
             }
-          })}
+
+            return result;
+          })()}
         </div>
       </div>
     </div>
