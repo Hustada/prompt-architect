@@ -60,6 +60,9 @@ const SectionEditor = ({
         
         <div className="mt-2 prose dark:prose-invert max-w-none">
           {(() => {
+            // Special handling for Code Snippets section
+            const isCodeSnippetsSection = title === 'Code Snippets';
+            
             const lines = content.split('\n');
             const result = [];
             let inCodeBlock = false;
@@ -71,12 +74,17 @@ const SectionEditor = ({
               const line = lines[i];
               
               // Check for code block markers ```
-              if (line.startsWith('```')) {
+              if (line.trim().startsWith('```')) {
                 if (!inCodeBlock) {
                   // Start of code block
                   inCodeBlock = true;
                   codeBlockLanguage = line.substring(3).trim(); // Get language if specified
                   codeBlockContent = [];
+                  
+                  // If this is in Code Snippets section, also add the preceding line as a label
+                  if (isCodeSnippetsSection && i > 0 && lines[i-1].trim() !== '') {
+                    result.push(<p key={key++} className="font-medium text-blue-700 dark:text-blue-400 mt-4">{lines[i-1]}</p>);
+                  }
                 } else {
                   // End of code block
                   inCodeBlock = false;
@@ -97,6 +105,14 @@ const SectionEditor = ({
                 // Inside code block, collect lines
                 codeBlockContent.push(line);
               } else {
+                // Skip lines that are labels for code blocks in the Code Snippets section
+                if (isCodeSnippetsSection && 
+                    i < lines.length - 1 && 
+                    lines[i+1].trim().startsWith('```') && 
+                    line.trim() !== '') {
+                  continue;
+                }
+                
                 // Regular markdown processing
                 if (line.startsWith('- ')) {
                   result.push(
