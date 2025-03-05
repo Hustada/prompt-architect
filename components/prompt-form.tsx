@@ -3,12 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useTemplateStore } from '@/lib/store';
 import { ArrowDownTrayIcon, ClipboardIcon } from '@heroicons/react/24/outline';
+import PromptPreview from './prompt-preview';
+import { logger } from '@/lib/logger';
 
 export default function PromptForm() {
   const { selectedTemplate, sections } = useTemplateStore();
   const [sectionContent, setSectionContent] = useState<Record<string, string>>({});
   const [formattedMarkdown, setFormattedMarkdown] = useState('');
   const [copied, setCopied] = useState(false);
+  const [prompt, setPrompt] = useState<PromptData | null>(null);
 
   // Initialize section content when sections change
   useEffect(() => {
@@ -62,6 +65,12 @@ export default function PromptForm() {
     URL.revokeObjectURL(url);
   };
 
+  const handleClear = () => {
+    setPrompt(null);
+    // Add any other state resets needed
+    logger.info('User cleared prompt');
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -108,6 +117,13 @@ export default function PromptForm() {
           <pre className="whitespace-pre-wrap font-mono text-sm">{formattedMarkdown || 'Your formatted markdown will appear here...'}</pre>
         </div>
       </div>
+
+      <PromptPreview 
+        prompt={prompt}
+        onUpdatePrompt={handleUpdatePrompt}
+        onClear={handleClear}
+        onError={handleError}
+      />
     </div>
   );
 }

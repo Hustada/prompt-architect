@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import logger from '@/lib/logger';
 
@@ -17,45 +16,37 @@ const SectionEditor = ({
   onRegenerateSection,
   isRegenerating 
 }: SectionEditorProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
   const handleRegenerateClick = async () => {
     logger.info(`User requested regeneration of section: ${title}`);
     await onRegenerateSection(title);
   };
   
   return (
-    <div 
-      className="relative group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="relative border-b border-gray-200 dark:border-gray-700 pb-4 mb-6 last:border-0 last:mb-0 last:pb-0">
       <div className="mb-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-start gap-4">
           <h2 className="text-xl font-bold text-black dark:text-white font-mono">
             {title}
           </h2>
           
-          {(isHovered || isRegenerating) && (
-            <button
-              onClick={handleRegenerateClick}
-              disabled={isRegenerating}
-              className="depth-button inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 disabled:opacity-50"
-              title="Generate alternative for this section"
-            >
-              {isRegenerating ? (
-                <>
-                  <ArrowPathIcon className="h-3 w-3 mr-1 animate-spin" />
-                  Regenerating...
-                </>
-              ) : (
-                <>
-                  <ArrowPathIcon className="h-3 w-3 mr-1" />
-                  Alternative
-                </>
-              )}
-            </button>
-          )}
+          <button
+            onClick={handleRegenerateClick}
+            disabled={isRegenerating}
+            className="shrink-0 inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700"
+            title="Generate alternative for this section"
+          >
+            {isRegenerating ? (
+              <>
+                <ArrowPathIcon className="h-3 w-3 mr-1 animate-spin" />
+                Regenerating...
+              </>
+            ) : (
+              <>
+                <ArrowPathIcon className="h-3 w-3 mr-1" />
+                Alternative
+              </>
+            )}
+          </button>
         </div>
         
         <div className="mt-2 prose dark:prose-invert max-w-none">

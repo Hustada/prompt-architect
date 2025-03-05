@@ -125,8 +125,8 @@ export function generateGrokPrompt(params: PromptTemplateParams): string {
 export function parseMarkdownSections(markdown: string): Record<string, string> {
   const sections: Record<string, string> = {};
   
-  // Split by main headings (# )
-  const sectionRegex = /^# (.+)$/gm;
+  // Split by headings (# or ##)
+  const sectionRegex = /^#{1,2}\s+(.+)$/gm;
   let match;
   let lastIndex = 0;
   let lastHeading = '';

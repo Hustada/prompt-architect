@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ClipboardDocumentIcon, ArrowDownTrayIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { ClipboardDocumentIcon, ArrowDownTrayIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import SectionEditor from './section-editor';
 import { parseMarkdownSections, combineSections } from '@/lib/promptTemplates';
 import logger from '@/lib/logger';
@@ -16,10 +16,11 @@ interface PromptPreviewProps {
     model: AIModel;
   } | null;
   onUpdatePrompt: (updatedMarkdown: string) => void;
+  onClear: () => void;
   onError?: (sectionTitle: string, errorMessage: string) => void;
 }
 
-const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) => {
+const PromptPreview = ({ prompt, onUpdatePrompt, onClear, onError }: PromptPreviewProps) => {
   const [copied, setCopied] = useState(false);
   const [regeneratingSections, setRegeneratingSections] = useState<string[]>([]);
   
@@ -127,6 +128,13 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) 
     <div className="space-y-4">
       <div className="flex justify-end space-x-2">
         <button
+          onClick={onClear}
+          className="depth-button inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-white dark:bg-gray-800 text-red-600 dark:text-red-400 border border-gray-200 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+        >
+          <XMarkIcon className="h-4 w-4 mr-1" />
+          Clear
+        </button>
+        <button
           onClick={copyToClipboard}
           className="depth-button inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700"
         >
@@ -151,7 +159,7 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) 
         </button>
       </div>
       
-      <div className="depth-card overflow-hidden">
+      <div className="depth-card">
         <div className="p-4 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <h3 className="font-mono text-sm font-medium text-gray-700 dark:text-gray-300">prompt.md</h3>
         </div>
