@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans perspective-container`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {/* Animated background grid with parallax effect */}
-          <div className="fixed inset-0 bg-grid opacity-30 z-0"></div>
+          <div className="fixed inset-0 bg-grid opacity-50 z-0"></div>
           
           {/* Main content with depth effect */}
           <main className="relative z-10 min-h-screen p-4 md:p-8 lg:p-12">
