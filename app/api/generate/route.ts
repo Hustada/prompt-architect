@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AIModel, callOpenAI, callClaude, callGemini, callDeepseek, extractMarkdown } from '@/lib/api';
-import { ProjectType, generateOpenAIPrompt, generateClaudePrompt, generateGeminiPrompt, generateDeepseekPrompt } from '@/lib/promptTemplates';
+import { AIModel, callOpenAI, callClaude, callGemini, extractMarkdown } from '@/lib/api';
+import { ProjectType, generateOpenAIPrompt, generateClaudePrompt, generateGeminiPrompt } from '@/lib/promptTemplates';
 import logger from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
@@ -37,10 +37,7 @@ export async function POST(request: NextRequest) {
         promptText = generateGeminiPrompt({ projectType, projectIdea, sectionToRegenerate, previousResponse });
         response = await callGemini(promptText, requestId);
         break;
-      case 'deepseek':
-        promptText = generateDeepseekPrompt({ projectType, projectIdea, sectionToRegenerate, previousResponse });
-        response = await callDeepseek(promptText, requestId);
-        break;
+      // Deepseek model removed due to account balance issues
       default:
         throw new Error(`Unsupported model: ${model}`);
     }

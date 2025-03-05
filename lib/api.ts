@@ -11,7 +11,7 @@ import {
   generateDeepseekPrompt,
 } from './promptTemplates';
 
-export type AIModel = 'openai' | 'claude' | 'gemini' | 'deepseek';
+export type AIModel = 'openai' | 'claude' | 'gemini';
 
 interface GeneratePromptParams {
   projectType: ProjectType;
@@ -219,8 +219,7 @@ export function extractMarkdown(data: any, model: AIModel): string {
       return data.content?.[0]?.text || '';
     case 'gemini':
       return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    case 'deepseek':
-      return data.choices?.[0]?.message?.content || '';
+    // Deepseek model removed
     default:
       return '';
   }

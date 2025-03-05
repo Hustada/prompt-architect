@@ -8,7 +8,7 @@ PromptArchitect transforms project ideas into structured AI prompts. Generate co
 
 - **AI-Powered Generation**: Transform simple project ideas into comprehensive specifications
 - **Multiple Project Types**: Support for Frontend, Backend, Full Stack, Mobile, and Data Science projects
-- **Multiple AI Models**: Integration with OpenAI, Anthropic Claude, Google Gemini, and Deepseek
+- **Multiple AI Models**: Integration with OpenAI, Anthropic Claude, and Google Gemini
 - **Section Regeneration**: Request alternative versions of specific sections
 - **Live Markdown Preview**: See your prompt take shape in real-time
 - **Export Options**: Copy to clipboard or download as markdown files
@@ -116,7 +116,6 @@ PromptArchitect supports the following AI models:
 - **OpenAI GPT-4**: Powerful general-purpose language model
 - **Anthropic Claude**: Excellent for detailed, nuanced content
 - **Google Gemini**: Strong technical and reasoning capabilities
-- **Deepseek**: Specialized for technical content generation
 
 Each model requires its own API key to be set in the `.env.local` file.
 

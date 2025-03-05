@@ -64,7 +64,6 @@ const IdeaInput = ({ onGenerate, isGenerating }: IdeaInputProps) => {
             <option value="openai">OpenAI GPT-4</option>
             <option value="claude">Anthropic Claude</option>
             <option value="gemini">Google Gemini</option>
-            <option value="deepseek">Deepseek</option>
           </select>
         </div>
       </div>
