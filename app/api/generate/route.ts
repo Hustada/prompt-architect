@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AIModel, callOpenAI, callClaude, callGemini, extractMarkdown } from '@/lib/api';
+import { AIModel, callOpenAI, callClaude, callGemini, callGrok, extractMarkdown } from '@/lib/api';
 import { ProjectType, generateOpenAIPrompt, generateClaudePrompt, generateGeminiPrompt } from '@/lib/promptTemplates';
 import logger from '@/lib/logger';
 
@@ -36,6 +36,11 @@ export async function POST(request: NextRequest) {
       case 'gemini':
         promptText = generateGeminiPrompt({ projectType, projectIdea, sectionToRegenerate, previousResponse });
         response = await callGemini(promptText, requestId);
+        break;
+      case 'grok':
+        // For now, we can use the OpenAI prompt template for Grok since they have similar APIs
+        promptText = generateOpenAIPrompt({ projectType, projectIdea, sectionToRegenerate, previousResponse });
+        response = await callGrok(promptText, requestId);
         break;
       // Deepseek model removed due to account balance issues
       default:

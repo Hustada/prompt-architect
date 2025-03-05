@@ -11,7 +11,7 @@ import {
   generateDeepseekPrompt,
 } from './promptTemplates';
 
-export type AIModel = 'openai' | 'claude' | 'gemini';
+export type AIModel = 'openai' | 'claude' | 'gemini' | 'grok';
 
 interface GeneratePromptParams {
   projectType: ProjectType;
@@ -209,6 +209,35 @@ export async function callDeepseek(prompt: string, requestId: string): Promise<R
 }
 
 /**
+ * Call the Grok API (server-side only)
+ */
+export async function callGrok(prompt: string, requestId: string): Promise<Response> {
+  logger.debug('Calling Grok API', { promptLength: prompt.length }, requestId);
+  
+  const apiKey = process.env.GROK_API_KEY;
+  if (!apiKey) {
+    throw new Error('Grok API key not found');
+  }
+  
+  return fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'grok-2-latest',
+      messages: [
+        { role: 'system', content: 'You are PromptArchitect, an expert in creating structured project specifications.' },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.7,
+      stream: false
+    }),
+  });
+}
+
+/**
  * Extract markdown from API response based on the model (server-side only)
  */
 export function extractMarkdown(data: any, model: AIModel): string {
@@ -219,7 +248,8 @@ export function extractMarkdown(data: any, model: AIModel): string {
       return data.content?.[0]?.text || '';
     case 'gemini':
       return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    // Deepseek model removed
+    case 'grok':
+      return data.choices?.[0]?.message?.content || '';
     default:
       return '';
   }

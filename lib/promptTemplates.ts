@@ -109,6 +109,14 @@ export function generateGeminiPrompt(params: PromptTemplateParams): string {
   return generateOpenAIPrompt(params);
 }
 
+/**
+ * Generate a prompt for Grok models
+ */
+export function generateGrokPrompt(params: PromptTemplateParams): string {
+  // Grok can use the same prompt template as OpenAI
+  return generateOpenAIPrompt(params);
+}
+
 // Deepseek model removed
 
 /**

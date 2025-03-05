@@ -13,8 +13,8 @@ interface IdeaInputProps {
 
 const IdeaInput = ({ onGenerate, isGenerating }: IdeaInputProps) => {
   const [idea, setIdea] = useState('');
-  const [projectType, setProjectType] = useState<ProjectType>('fullstack');
-  const [model, setModel] = useState<AIModel>('openai');
+  const [projectType, setProjectType] = useState<ProjectType>('frontend');
+  const [model, setModel] = useState<AIModel>('claude');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,9 +61,10 @@ const IdeaInput = ({ onGenerate, isGenerating }: IdeaInputProps) => {
             onChange={(e) => setModel(e.target.value as AIModel)}
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="openai">OpenAI GPT-4</option>
             <option value="claude">Anthropic Claude</option>
+            <option value="openai">OpenAI GPT-4</option>
             <option value="gemini">Google Gemini</option>
+            <option value="grok">Grok</option>
           </select>
         </div>
       </div>
