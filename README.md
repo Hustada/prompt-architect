@@ -1,13 +1,13 @@
 # PromptArchitect
 
 PromptArchitect transforms project ideas into structured AI prompts. Generate comprehensive specifications for any project type with multiple AI models. Streamline your development workflow with precision-engineered prompts.
-![Screenshot 2025-03-04 at 3 46 33 PM](https://github.com/user-attachments/assets/d4086034-f168-4d77-92a7-88385bec27c2)
+![Screenshot 2025-03-05 at 9 44 28 AM](https://github.com/user-attachments/assets/bf55fd74-14c9-49b7-8a8f-f3a68ab90d86)
 
 ## Features
 
 - **AI-Powered Generation**: Transform simple project ideas into comprehensive specifications
 - **Multiple Project Types**: Support for Frontend, Backend, Full Stack, Mobile, and Data Science projects
-- **Multiple AI Models**: Integration with OpenAI, Anthropic Claude, and Google Gemini
+- **Multiple AI Models**: Integration with OpenAI, Anthropic Claude, Google Gemini, and Grok
 - **Section Regeneration**: Request alternative versions of specific sections
 - **Live Markdown Preview**: See your prompt take shape in real-time
 - **Export Options**: Copy to clipboard or download as markdown files
