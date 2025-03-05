@@ -81,8 +81,8 @@ const SectionEditor = ({
                   // End of code block
                   inCodeBlock = false;
                   result.push(
-                    <div key={key++} className="bg-gray-100 dark:bg-gray-900 rounded-md p-4 my-4 overflow-x-auto">
-                      <pre className="text-sm font-mono">
+                    <div key={key++} className="bg-gray-100 dark:bg-gray-900 rounded-md p-4 my-4 overflow-x-auto border border-gray-200 dark:border-gray-700">
+                      <pre className="text-sm font-mono text-gray-800 dark:text-gray-200">
                         <code className={`language-${codeBlockLanguage}`}>
                           {codeBlockContent.join('\n')}
                         </code>
