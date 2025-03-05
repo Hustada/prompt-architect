@@ -4,16 +4,27 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 245, 248, 250;
-  --blueprint-grid-color: 59, 130, 246;
-  --blueprint-grid-size: 20px;
+  --background-rgb: 248, 248, 248;
+  --accent-rgb: 0, 0, 0;
+  --grid-size: 24px;
+  --depth-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --card-bg: 255, 255, 255;
+  --card-border: 230, 230, 230;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --card-transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-rgb: 15, 23, 42;
-    --blueprint-grid-color: 96, 165, 250;
+    --foreground-rgb: 240, 240, 240;
+    --background-rgb: 16, 16, 16;
+    --accent-rgb: 255, 255, 255;
+    --depth-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+    --card-bg: 28, 28, 28;
+    --card-border: 40, 40, 40;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --card-hover-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -21,14 +32,21 @@ body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
 }
 
-/* Blueprint grid background */
-.bg-grid-blueprint {
-  background-size: var(--blueprint-grid-size) var(--blueprint-grid-size);
+/* Parallax grid background */
+.bg-grid {
+  background-size: var(--grid-size) var(--grid-size);
   background-image:
-    linear-gradient(to right, rgba(var(--blueprint-grid-color), 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(var(--blueprint-grid-color), 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(var(--accent-rgb), 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(var(--accent-rgb), 0.05) 1px, transparent 1px);
+  animation: grid-float 20s ease infinite;
+}
+
+@keyframes grid-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.02); }
 }
 
 /* Custom font classes */
@@ -42,8 +60,69 @@ body {
 
 /* Markdown styling */
 .prose pre {
-  background-color: rgba(var(--blueprint-grid-color), 0.05);
-  border: 1px solid rgba(var(--blueprint-grid-color), 0.2);
+  background-color: rgba(var(--accent-rgb), 0.05);
+  border: 1px solid rgba(var(--accent-rgb), 0.1);
   border-radius: 0.375rem;
   font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Card styling with depth effects */
+.depth-card {
+  background-color: rgb(var(--card-bg));
+  border: 1px solid rgb(var(--card-border));
+  border-radius: 0.5rem;
+  box-shadow: var(--card-shadow);
+  transition: var(--card-transition);
+  transform: translateZ(0);
+}
+
+.depth-card:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* 3D Perspective effects */
+.perspective-container {
+  perspective: 1000px;
+  perspective-origin: center;
+}
+
+.tilt-element {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.tilt-element:hover {
+  transform: rotateX(2deg) rotateY(2deg);
+}
+
+/* Depth layers for parallax effect */
+.depth-layer-1 {
+  transform: translateZ(0);
+}
+
+.depth-layer-2 {
+  transform: translateZ(20px);
+}
+
+.depth-layer-3 {
+  transform: translateZ(40px);
+}
+
+/* Button with depth */
+.depth-button {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateZ(0);
+}
+
+.depth-button:hover {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.depth-button:active {
+  transform: translateY(1px) translateZ(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }

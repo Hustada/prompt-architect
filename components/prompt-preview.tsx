@@ -128,7 +128,7 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) 
       <div className="flex justify-end space-x-2">
         <button
           onClick={copyToClipboard}
-          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+          className="depth-button inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700"
         >
           {copied ? (
             <>
@@ -144,18 +144,18 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) 
         </button>
         <button
           onClick={downloadMarkdown}
-          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+          className="depth-button inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700"
         >
           <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
           Download
         </button>
       </div>
       
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-        <div className="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="font-mono text-sm font-medium text-gray-500 dark:text-gray-400">prompt.md</h3>
+      <div className="depth-card overflow-hidden">
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="font-mono text-sm font-medium text-gray-700 dark:text-gray-300">prompt.md</h3>
         </div>
-        <div className="p-4 bg-white dark:bg-gray-800 max-w-none">
+        <div className="p-4 bg-white dark:bg-gray-900 max-w-none">
           {Object.keys(sections).length > 0 ? (
             Object.entries(sections).map(([title, content]) => (
               <SectionEditor
@@ -167,16 +167,16 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onError }: PromptPreviewProps) 
               />
             ))
           ) : (
-            <div className="text-center p-4 text-gray-500 dark:text-gray-400">
+            <div className="text-center p-4 text-gray-700 dark:text-gray-300">
               <p>No sections found in the generated prompt. The format may be incorrect.</p>
             </div>
           )}
         </div>
       </div>
       
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg p-4">
-        <h3 className="font-medium text-blue-800 dark:text-blue-300 mb-2">AI Suggestions</h3>
-        <p className="text-sm text-blue-700 dark:text-blue-400">
+      <div className="depth-card p-4 mt-4">
+        <h3 className="font-medium text-black dark:text-white mb-2">AI Suggestions</h3>
+        <p className="text-sm text-gray-700 dark:text-gray-300">
           Hover over any section heading to see the option to generate an alternative version of that section.
         </p>
       </div>

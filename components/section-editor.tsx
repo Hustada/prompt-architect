@@ -32,7 +32,7 @@ const SectionEditor = ({
     >
       <div className="mb-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-blue-800 dark:text-blue-400 font-mono">
+          <h2 className="text-xl font-bold text-black dark:text-white font-mono">
             {title}
           </h2>
           
@@ -40,7 +40,7 @@ const SectionEditor = ({
             <button
               onClick={handleRegenerateClick}
               disabled={isRegenerating}
-              className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50"
+              className="depth-button inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 disabled:opacity-50"
               title="Generate alternative for this section"
             >
               {isRegenerating ? (
@@ -83,14 +83,14 @@ const SectionEditor = ({
                   
                   // If this is in Code Snippets section, also add the preceding line as a label
                   if (isCodeSnippetsSection && i > 0 && lines[i-1].trim() !== '') {
-                    result.push(<p key={key++} className="font-medium text-blue-700 dark:text-blue-400 mt-4">{lines[i-1]}</p>);
+                    result.push(<p key={key++} className="font-medium text-black dark:text-white mt-4">{lines[i-1]}</p>);
                   }
                 } else {
                   // End of code block
                   inCodeBlock = false;
                   result.push(
-                    <div key={key++} className="bg-gray-100 dark:bg-gray-900 rounded-md p-4 my-4 overflow-x-auto border border-gray-200 dark:border-gray-700">
-                      <pre className="text-sm font-mono text-gray-800 dark:text-gray-200">
+                    <div key={key++} className="bg-gray-100 dark:bg-gray-900 rounded-md p-4 my-4 overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-sm">
+                      <pre className="text-sm font-mono text-black dark:text-white">
                         <code className={`language-${codeBlockLanguage}`}>
                           {codeBlockContent.join('\n')}
                         </code>
