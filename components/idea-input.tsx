@@ -86,7 +86,7 @@ const IdeaInput = ({ onGenerate, isGenerating }: IdeaInputProps) => {
       <button
         type="submit"
         disabled={isGenerating || !idea.trim()}
-        className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-md transition-colors duration-200"
+        className="w-full flex items-center justify-center px-4 py-2 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-600 text-white font-medium rounded-md transition-colors duration-200"
       >
         {isGenerating ? 'Generating...' : (
           <>
