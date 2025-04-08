@@ -107,13 +107,12 @@ export async function callOpenAI(prompt: string, requestId: string): Promise<Res
       'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'gpt-4',
+      model: 'o3-mini',
       messages: [
         { role: 'system', content: 'You are PromptArchitect, an expert in creating structured project specifications.' },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.7,
-      max_tokens: 2000,
+      max_completion_tokens: 2000,
     }),
   });
 }
@@ -158,7 +157,7 @@ export async function callGemini(prompt: string, requestId: string): Promise<Res
     throw new Error('Gemini API key not found');
   }
   
-  return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+  return fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-exp-03-25:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

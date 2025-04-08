@@ -82,6 +82,12 @@ export default function Home() {
     });
   };
   
+  const handleClear = () => {
+    setGeneratedPrompt(null);
+    setError(null);
+    logger.info('Prompt cleared');
+  };
+  
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="fixed top-4 right-4 z-50">
@@ -135,6 +141,7 @@ export default function Home() {
           <PromptPreview 
             prompt={generatedPrompt} 
             onUpdatePrompt={handleUpdatePrompt}
+            onClear={handleClear}
             onError={handleRegenerationError}
           />
         </div>
