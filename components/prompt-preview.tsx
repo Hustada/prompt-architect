@@ -76,9 +76,16 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onClear, onError }: PromptPrevi
       URL.revokeObjectURL(url);
       logger.info('User downloaded prompt as markdown file', { filename });
     } catch (error) {
-      logger.error('Failed to download markdown file', { error: error.message });
-      if (onError) {
-        onError('Download', 'Failed to download the markdown file');
+      if (error instanceof Error) {
+        logger.error('Failed to download markdown file', { error: error.message });
+        if (onError) {
+          onError('Download', 'Failed to download the markdown file');
+        }
+      } else {
+        logger.error('Failed to download markdown file', { error: String(error) });
+        if (onError) {
+          onError('Download', 'An unknown error occurred while downloading the markdown file');
+        }
       }
     }
   };
@@ -111,10 +118,18 @@ const PromptPreview = ({ prompt, onUpdatePrompt, onClear, onError }: PromptPrevi
       
       logger.info(`Successfully regenerated section: ${sectionTitle}`);
     } catch (error) {
-      logger.error(`Failed to regenerate section: ${sectionTitle}`, { error });
-      // Call the onError callback if provided
-      if (onError) {
-        onError(sectionTitle, error.message || 'An error occurred while regenerating this section');
+      if (error instanceof Error) {
+        logger.error(`Failed to regenerate section: ${sectionTitle}`, { error });
+        // Call the onError callback if provided
+        if (onError) {
+          onError(sectionTitle, error.message || 'An error occurred while regenerating this section');
+        }
+      } else {
+        logger.error(`Failed to regenerate section: ${sectionTitle}`, { error: String(error) });
+        // Call the onError callback if provided
+        if (onError) {
+          onError(sectionTitle, 'An unknown error occurred while regenerating this section');
+        }
       }
     } finally {
       setRegeneratingSections(prev => prev.filter(s => s !== sectionTitle));

@@ -8,7 +8,6 @@ import {
   generateOpenAIPrompt,
   generateClaudePrompt,
   generateGeminiPrompt,
-  generateDeepseekPrompt,
 } from './promptTemplates';
 
 export type AIModel = 'openai' | 'claude' | 'gemini' | 'grok';
@@ -77,11 +76,19 @@ export async function generatePrompt(params: GeneratePromptParams): Promise<AIRe
     
     return data;
   } catch (error) {
-    logger.error(
-      `Failed to generate prompt using ${model}`,
-      { error: error.message },
-      requestId
-    );
+    if (error instanceof Error) {
+      logger.error(
+        `Failed to generate prompt using ${model}`,
+        { error: error.message },
+        requestId
+      );
+    } else {
+      logger.error(
+        `Failed to generate prompt using ${model}`,
+        { error: String(error) },
+        requestId
+      );
+    }
     throw error;
   }
 }
@@ -174,35 +181,6 @@ export async function callGemini(prompt: string, requestId: string): Promise<Res
         temperature: 0.7,
         maxOutputTokens: 2000,
       },
-    }),
-  });
-}
-
-/**
- * Call the Deepseek API (server-side only)
- */
-export async function callDeepseek(prompt: string, requestId: string): Promise<Response> {
-  logger.debug('Calling Deepseek API', { promptLength: prompt.length }, requestId);
-  
-  const apiKey = process.env.DEEPSEEK_API_KEY;
-  if (!apiKey) {
-    throw new Error('Deepseek API key not found');
-  }
-  
-  return fetch('https://api.deepseek.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'deepseek-chat',
-      messages: [
-        { role: 'system', content: 'You are PromptArchitect, an expert in creating structured project specifications.' },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 2000,
     }),
   });
 }

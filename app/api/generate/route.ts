@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AIModel, callOpenAI, callClaude, callGemini, callGrok, extractMarkdown } from '@/lib/api';
 import { ProjectType, generateOpenAIPrompt, generateClaudePrompt, generateGeminiPrompt } from '@/lib/promptTemplates';
 import logger from '@/lib/logger';
+import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from 'next-themes';
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,11 +73,20 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Error generating prompt', { error: error.message });
-    
-    return NextResponse.json(
-      { error: 'Failed to generate prompt', message: error.message },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      logger.error('Error generating prompt', { error: error.message });
+
+      return NextResponse.json(
+        { error: 'Failed to generate prompt', message: error.message },
+        { status: 500 }
+      );
+    } else {
+      logger.error('Error generating prompt', { error: String(error) });
+
+      return NextResponse.json(
+        { error: 'Failed to generate prompt', message: 'An unknown error occurred' },
+        { status: 500 }
+      );
+    }
   }
 }

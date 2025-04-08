@@ -54,13 +54,23 @@ export default function Home() {
       
       logger.info('Prompt generated successfully', { requestId: response.requestId });
     } catch (error) {
-      logger.error('Failed to generate prompt', { error: error.message });
-      
-      // Set error state to display to the user
-      setError({
-        message: 'Failed to generate prompt',
-        details: error.message || 'Please check your API keys and try again.'
-      });
+      if (error instanceof Error) {
+        logger.error('Failed to generate prompt', { error: error.message });
+
+        // Set error state to display to the user
+        setError({
+          message: 'Failed to generate prompt',
+          details: error.message || 'Please check your API keys and try again.'
+        });
+      } else {
+        logger.error('Failed to generate prompt', { error: String(error) });
+
+        // Set error state to display to the user
+        setError({
+          message: 'Failed to generate prompt',
+          details: 'An unknown error occurred. Please check your API keys and try again.'
+        });
+      }
     } finally {
       setIsGenerating(false);
     }

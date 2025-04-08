@@ -4,7 +4,17 @@ import { useState, useEffect } from 'react';
 import { useTemplateStore } from '@/lib/store';
 import { ArrowDownTrayIcon, ClipboardIcon } from '@heroicons/react/24/outline';
 import PromptPreview from './prompt-preview';
-import { logger } from '@/lib/logger';
+import logger from '@/lib/logger';
+import { ProjectType } from '@/lib/promptTemplates';
+import { AIModel } from '@/lib/api';
+
+// Define the PromptData type
+interface PromptData {
+  markdown: string;
+  projectType: ProjectType;
+  projectIdea: string;
+  model: AIModel;
+}
 
 export default function PromptForm() {
   const { selectedTemplate, sections } = useTemplateStore();
@@ -69,6 +79,15 @@ export default function PromptForm() {
     setPrompt(null);
     // Add any other state resets needed
     logger.info('User cleared prompt');
+  };
+
+  // Define the missing functions
+  const handleUpdatePrompt = (updatedMarkdown: string) => {
+    setPrompt(prev => prev ? { ...prev, markdown: updatedMarkdown } : null);
+  };
+
+  const handleError = (sectionTitle: string, errorMessage: string) => {
+    logger.error(`Error in section: ${sectionTitle}`, { errorMessage });
   };
 
   return (
